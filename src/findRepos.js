@@ -3,6 +3,7 @@ const _ = require('lodash');
 const bluebird = require('bluebird');
 const request = require('superagent');
 const countStars = require('github-star-history').default;
+const fs = require('fs');
 
 const token = process.env.GITHUB_TOKEN;
 const date = '2019-01-01T00:00:00Z';
@@ -85,6 +86,7 @@ const findRepos = retrieveOnePage;
         reposSortedByStarQuotient,
       };
       console.log('result for category', category, JSON.stringify(enhancedCategoryResult));
+      fs.writeFileSync(`category-${category}.json`, JSON.stringify(enhancedCategoryResult));
 
       return enhancedCategoryResult;
     }),
