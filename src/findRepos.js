@@ -65,7 +65,7 @@ const findRepos = retrieveOnePage;
       console.log('starting searching repos in category', category, '(', categoryIndex, '/', categories.length, ')');
       const repos = await findRepos(category);
 
-      return bluebird.mapSeries(repos, async (repo, repoIndex) => {
+      const categoryResult = await bluebird.mapSeries(repos, async (repo, repoIndex) => {
         // eslint-disable-next-line max-len
         console.log('starting counting past stars for repo', repo.full_name, '(', repoIndex, '/', repos.length, '), category:', category, '(', categoryIndex, '/', categories.length, ')');
         const pastStars = await countStars(repo.full_name, date);
@@ -73,8 +73,20 @@ const findRepos = retrieveOnePage;
         return {
           ...repo,
           pastStars,
+          starDifference: repo.stargazers_count - pastStars,
+          starQuotient: repo.stargazers_count / pastStars,
         };
       });
+
+      const reposSortedByStarDifference = _.sortBy(categoryResult, repo => -repo.starDifference);
+      const reposSortedByStarQuotient = _.sortBy(categoryResult, repo => -repo.starQuotient);
+      const enhancedCategoryResult = {
+        reposSortedByStarDifference,
+        reposSortedByStarQuotient,
+      };
+      console.log('result for category', category, JSON.stringify(enhancedCategoryResult));
+
+      return enhancedCategoryResult;
     }),
   );
   console.log(JSON.stringify(result));
