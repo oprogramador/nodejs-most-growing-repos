@@ -4,5 +4,3 @@
 [![Build Status](https://travis-ci.org/oprogramador/nodejs-most-growing-repos.svg?branch=master)](https://travis-ci.org/oprogramador/nodejs-most-growing-repos
 )
 
-[![NPM status](https://nodei.co/npm/nodejs-most-growing-repos.png?downloads=true&stars=true)](https://npmjs.org/package/nodejs-most-growing-repos
-)
