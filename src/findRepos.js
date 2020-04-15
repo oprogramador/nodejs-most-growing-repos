@@ -52,7 +52,7 @@ const retrieveOnePage = category => request('https://api.github.com/search/repos
     ))
     .filter(item => item.stargazers_count < 39990))
   .catch(async (error) => {
-    console.error(error);
+    console.error(error.response.error);
     await bluebird.delay(3000);
 
     return retrieveOnePage(category);
