@@ -49,7 +49,8 @@ const retrieveOnePage = category => request('https://api.github.com/search/repos
       'description',
       'stargazers_count',
       'language',
-    )))
+    ))
+    .filter(item => item.stargazers_count < 39990))
   .catch(async (error) => {
     console.error(error);
     await bluebird.delay(3000);
@@ -65,6 +66,7 @@ const findRepos = retrieveOnePage;
     await bluebird.mapSeries(categories, async (category, categoryIndex) => {
       console.log('starting searching repos in category', category, '(', categoryIndex, '/', categories.length, ')');
       const repos = await findRepos(category);
+      console.log('repos', repos);
 
       const categoryResult = await bluebird.mapSeries(repos, async (repo, repoIndex) => {
         // eslint-disable-next-line max-len
@@ -91,5 +93,6 @@ const findRepos = retrieveOnePage;
       return enhancedCategoryResult;
     }),
   );
+  fs.writeFileSync('all.json', JSON.stringify(result));
   console.log(JSON.stringify(result));
 })();
